@@ -24,3 +24,14 @@ apt-get install metricbeat
 echo "network.host: 0.0.0.0" >>  /etc/elasticsearch/elasticsearch.yml
 echo "server.host: 0.0.0.0" >> /etc/kibana/kibana.yml
 cp 10-logstash.conf /etc/logstash/conf.d/
+
+# Manage services with update-rc.d
+update-rc.d elasticsearch defaults 95 10
+update-rc.d kibana defaults 95 10
+update-rc.d logstash defaults 95 10
+
+# Manage services with systemctl
+systemctl daemon-reload
+systemctl enable elasticsearch.service
+systemctl enable kibana.service
+systemctl enable logstash.service
