@@ -1,24 +1,16 @@
 #!/bin/bash
 
 # Update system and install packages
-apt update
 apt-get update
 apt-get dist-upgrade -qy
+apt-get install wget gnupg2 apt-transport-https openjdk-8-jre-headless apt-utils curl procps vim -qy
 
-# install elasticsearch
-apt install elasticsearch
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
 
-# install kibana
-apt-get install kibana
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-6.x.list
 
-# install logstash
-apt-get install logstash
+apt-get update && apt-get install -qy elasticsearch kibana logstash
 
-# install filebeat
-apt-get install filebeat
-
-# install metricbeat
-apt-get install metricbeat
 
 # set up config files for Elasticsearch, Kibana, and Logstash
 echo "network.host: 0.0.0.0" >>  /etc/elasticsearch/elasticsearch.yml
