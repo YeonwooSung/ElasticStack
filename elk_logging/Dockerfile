@@ -13,4 +13,3 @@ EXPOSE 9200
 RUN bash setup_elk.sh
 
 ENTRYPOINT service elasticsearch start && service kibana start && service logstash start && tail -f /var/log/elasticsearch/elasticsearch.log
-
