@@ -23,7 +23,7 @@ update-rc.d kibana defaults 95 10
 update-rc.d logstash defaults 95 10
 
 # Manage services with systemctl
-systemctl daemon-reload
-systemctl enable elasticsearch.service
-systemctl enable kibana.service
-systemctl enable logstash.service
+#systemctl daemon-reload
+#systemctl enable elasticsearch.service
+#systemctl enable kibana.service
+#systemctl enable logstash.service

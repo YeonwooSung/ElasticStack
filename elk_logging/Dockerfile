@@ -12,4 +12,5 @@ EXPOSE 9200
 # run setup_elk.sh
 RUN bash setup_elk.sh
 
-ENTRYPOINT systemctl start elasticsearch && systemctl start kibana && systemctl start logstash && tail -f /var/log/elasticsearch/elasticsearch.log
+ENTRYPOINT service elasticsearch start && service kibana start && service logstash start && tail -f /var/log/elasticsearch/elasticsearch.log
+
