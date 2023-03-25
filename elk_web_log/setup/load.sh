@@ -6,8 +6,9 @@ echo -n "Username: "
 read username
 echo -n "Password: "
 read -s password
+echo ""
 echo -n "Port Number: "
-read -s portNum
+read portNum
 echo
 
 # load index template
