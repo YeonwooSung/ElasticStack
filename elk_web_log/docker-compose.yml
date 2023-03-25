@@ -1,50 +1,107 @@
-version: '3.6'
+version: '3.7'
+
 services:
-    Elasticsearch:
-        image: elasticsearch:7.16.2
-        container_name: elasticsearch
-        restart: always
+    # The 'setup' service runs a one-off script which initializes users inside
+    # Elasticsearch — such as 'logstash_internal' and 'kibana_system' — with the
+    # values of the passwords defined in the '.env' file.
+    #
+    # This task is only performed during the *initial* startup of the stack. On all
+    # subsequent runs, the service simply returns immediately, without performing
+    # any modification to existing users.
+    setup:
+        build:
+            context: setup/
+            args:
+                ELASTIC_VERSION: ${ELASTIC_VERSION}
+        init: true
         volumes:
-            - elastic_data:/usr/share/elasticsearch/data/
+            - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
+            - ./setup/lib.sh:/lib.sh:ro,Z
+            - ./setup/roles:/roles:ro,Z
+            - setup:/state:Z
         environment:
-            ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+            ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+            LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+            KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+            METRICBEAT_INTERNAL_PASSWORD: ${METRICBEAT_INTERNAL_PASSWORD:-}
+            FILEBEAT_INTERNAL_PASSWORD: ${FILEBEAT_INTERNAL_PASSWORD:-}
+            HEARTBEAT_INTERNAL_PASSWORD: ${HEARTBEAT_INTERNAL_PASSWORD:-}
+            MONITORING_INTERNAL_PASSWORD: ${MONITORING_INTERNAL_PASSWORD:-}
+            BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD:-}
+        networks:
+            - elk
+        depends_on:
+            - elasticsearch
+
+    elasticsearch:
+        build:
+            context: elasticsearch/
+            args:
+                ELASTIC_VERSION: ${ELASTIC_VERSION}
+        volumes:
+            - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+            - elasticsearch:/usr/share/elasticsearch/data:Z
+        ports:
+            - 9200:9200
+            - 9300:9300
+        environment:
+            node.name: elasticsearch
+            ES_JAVA_OPTS: -Xms512m -Xmx512m
+            # Bootstrap password.
+            # Used to initialize the keystore during the initial startup of
+            # Elasticsearch. Ignored on subsequent runs.
+            ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+            # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+            # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
             discovery.type: single-node
-        ports:
-            - '9200:9200'
-            - '9300:9300'
         networks:
             - elk
+        restart: unless-stopped
 
-    Logstash:
-        image: logstash:7.16.2
-        container_name: logstash
-        restart: always
+    logstash:
+        build:
+            context: logstash/
+            args:
+                ELASTIC_VERSION: ${ELASTIC_VERSION}
         volumes:
-            - ./logstash/:/logstash_dir
-        command: logstash -f /logstash_dir/logstash.conf 
-        depends_on:
-            - Elasticsearch
+            - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+            - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
         ports:
-            - '9600:9600'
+            - 5044:5044
+            - 50000:50000/tcp
+            - 50000:50000/udp
+            - 9600:9600
         environment:
-            LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+            LS_JAVA_OPTS: -Xms256m -Xmx256m
+            LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
         networks:
             - elk
+        depends_on:
+            - elasticsearch
+        restart: unless-stopped
 
-    Kibana:
-        image: kibana:7.16.2
-        container_name: kibana
-        restart: always       
+    kibana:
+        build:
+            context: kibana/
+            args:
+                LASTIC_VERSION: ${ELASTIC_VERSION}
+        volumes:
+            - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
         ports:
-            - '5601:5601'
+            - 5601:5601
         environment:
-            - ELASTICSEARCH_URL=http://elasticsearch:9200  
-        depends_on:
-            - Elasticsearch  
+            KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
         networks:
             - elk
-volumes:
-    elastic_data: {}
+        depends_on:
+            - elasticsearch
+        restart: unless-stopped
+
 
 networks:
     elk:
+        driver: bridge
+
+volumes:
+    setup:
+    elasticsearch:
