@@ -1,0 +1,11 @@
+GET web-logs/_search?size=0
+{
+  "query": {
+    "range": {
+      "@timestamp": {
+        "gte": "2023-01-23T00:00:00.000Z",
+        "lt": "2023-03-24T00:00:00.000Z"
+      }
+    }
+  }
+}
