@@ -1,7 +1,7 @@
 # Elastic stack (ELK) on Docker
 
 [![Elastic Stack version](https://img.shields.io/badge/Elastic%20Stack-8.6.2-00bfb3?style=flat&logo=elastic-stack)](https://www.elastic.co/blog/category/releases)
-[![Build Status](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/workflows/CI/badge.svg?branch=main)](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/actions?query=workflow%3ACI+branch%3Amain)
+[![Build Status](https://github.com/deviantony/docker-elk/workflows/CI/badge.svg?branch=main)](https://github.com/deviantony/docker-elk/actions?query=workflow%3ACI+branch%3Amain)
 [![Join the chat](https://badges.gitter.im/Join%20Chat.svg)](https://app.gitter.im/#/room/#deviantony_docker-elk:gitter.im)
 
 Run the latest version of the [Elastic stack][elk-stack] with Docker and Docker Compose.
@@ -25,9 +25,9 @@ Based on the official Docker images from Elastic:
 
 Other available stack variants:
 
-* [`tls`](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/tree/tls): TLS encryption enabled in Elasticsearch, Kibana (opt in),
+* [`tls`](https://github.com/deviantony/docker-elk/tree/tls): TLS encryption enabled in Elasticsearch, Kibana (opt in),
   and Fleet
-* [`searchguard`](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/tree/searchguard): Search Guard support
+* [`searchguard`](https://github.com/deviantony/docker-elk/tree/searchguard): Search Guard support
 
 ---
 
@@ -84,7 +84,7 @@ own_. [sherifabdlnaby/elastdocker][elastdocker] is one example among others of p
 
 > **Warning**  
 > While Compose versions between **1.22.0** and **1.25.5** can technically run this stack as well, these versions have a
-> [known issue](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/pull/678#issuecomment-1055555368) which prevents them from
+> [known issue](https://github.com/deviantony/docker-elk/pull/678#issuecomment-1055555368) which prevents them from
 > parsing quoted values properly inside `.env` files.
 
 > **Note**  
@@ -129,7 +129,7 @@ instructions from the [documentation][mac-filesharing] to add more locations.
 Clone this repository onto the Docker host that will run the stack with the command below:
 
 ```sh
-git clone https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log.git
+git clone https://github.com/deviantony/docker-elk.git
 ```
 
 Then, start the stack components locally with Docker Compose:
@@ -265,9 +265,9 @@ command.
 
 Older major versions are also supported on separate branches:
 
-* [`release-7.x`](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/tree/release-7.x): 7.x series
-* [`release-6.x`](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/tree/release-6.x): 6.x series (End-of-life)
-* [`release-5.x`](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/tree/release-5.x): 5.x series (End-of-life)
+* [`release-7.x`](https://github.com/deviantony/docker-elk/tree/release-7.x): 7.x series
+* [`release-6.x`](https://github.com/deviantony/docker-elk/tree/release-6.x): 6.x series (End-of-life)
+* [`release-5.x`](https://github.com/deviantony/docker-elk/tree/release-5.x): 5.x series (End-of-life)
 
 ## Configuration
 
@@ -334,7 +334,7 @@ You can also cancel an ongoing trial before its expiry date — and thus revert 
 
 ### How to scale out the Elasticsearch cluster
 
-Follow the instructions from the Wiki: [Scaling out Elasticsearch](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/wiki/Elasticsearch-cluster)
+Follow the instructions from the Wiki: [Scaling out Elasticsearch](https://github.com/deviantony/docker-elk/wiki/Elasticsearch-cluster)
 
 ### How to re-execute the setup
 
@@ -450,8 +450,8 @@ logstash:
 
 See the following Wiki pages:
 
-* [External applications](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/wiki/External-applications)
-* [Popular integrations](https://github.com/YeonwooSung/ElasticStack/tree/main/elk_web_log/wiki/Popular-integrations)
+* [External applications](https://github.com/deviantony/docker-elk/wiki/External-applications)
+* [Popular integrations](https://github.com/deviantony/docker-elk/wiki/Popular-integrations)
 
 [elk-stack]: https://www.elastic.co/what-is/elk-stack
 [subscriptions]: https://www.elastic.co/subscriptions
